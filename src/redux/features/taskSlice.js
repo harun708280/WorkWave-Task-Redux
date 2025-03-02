@@ -16,9 +16,13 @@ const taskSlice=createSlice({
                 const lastElement=state.task.at(-1)
                 state.task.push({id:lastElement.id+1,status:'pending',...payload})
             }
+        },
+        updateTask:(state,{payload})=>{
+            const target=state.task.find((item)=>item.id===payload.id)
+            target.status=payload.status
         }
 
     }
 })
-export const {addTask}=taskSlice.actions
+export const {addTask,updateTask}=taskSlice.actions
 export default taskSlice.reducer

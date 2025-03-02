@@ -9,14 +9,16 @@ import { useSelector } from 'react-redux';
 const Tasks = () => {
   let [isOpen, setIsOpen] = useState(false)
   const {task}=useSelector((state)=>state.allTasks)
-  
+  const pending=task.filter(item=>item.status==='pending')
+  const running=task.filter(item=>item.status==='running')
+  const complete=task.filter(item=>item.status==='complete')
   
   return (
     <div className="h-screen grid grid-cols-12">
       <div className="col-span-9 px-10 pt-10">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="font-semibold text-3xl">Tasks</h1>
+            <h1 className="font-semibold text-3xl">WorkWave Tasks</h1>
           </div>
           <div className="flex gap-5">
             <button className="border-2 border-secondary/20 hover:border-primary hover:bg-primary rounded-xl h-10 w-10  grid place-content-center text-secondary hover:text-white transition-all">
@@ -41,12 +43,12 @@ const Tasks = () => {
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
               <h1>Up Next</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                0
+                {pending.length}
               </p>
             </div>
             <div className="space-y-3">
               {
-                task.map(item=><TaskCard key={item.id} task={item} />)
+                pending.map(item=><TaskCard key={item.id} task={item} />)
               }
             </div>
           </div>
@@ -54,23 +56,26 @@ const Tasks = () => {
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
               <h1>In Progress</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                0
+                {running.length}
               </p>
             </div>
             <div className="space-y-3">
-              <TaskCard />
-              <TaskCard />
+            {
+                running.map(item=><TaskCard key={item.id} task={item} />)
+              }
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
-              <h1>Up Next</h1>
+              <h1>Completed</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                0
+                {complete.length}
               </p>
             </div>
             <div className="space-y-3">
-              <TaskCard />
+            {
+                complete.map(item=><TaskCard key={item.id} task={item} />)
+              }
             </div>
           </div>
         </div>

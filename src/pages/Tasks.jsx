@@ -4,9 +4,13 @@ import TaskCard from '../components/tasks/TaskCard';
 import MyModal from '../components/Modal/Modal';
 import { useState } from 'react';
 import AddTask from '../components/tasks/AddTask';
+import { useSelector } from 'react-redux';
 
 const Tasks = () => {
   let [isOpen, setIsOpen] = useState(false)
+  const {task}=useSelector((state)=>state.allTasks)
+  
+  
   return (
     <div className="h-screen grid grid-cols-12">
       <div className="col-span-9 px-10 pt-10">
@@ -41,7 +45,9 @@ const Tasks = () => {
               </p>
             </div>
             <div className="space-y-3">
-              <TaskCard />
+              {
+                task.map(item=><TaskCard key={item.id} task={item} />)
+              }
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">

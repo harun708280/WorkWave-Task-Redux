@@ -19,7 +19,8 @@ export const createUser=createAsyncThunk('userSlice/CreateUser',async({email,pas
     return {
         email:data.user.email,
         name:data.user.displayName,
-        photo:data.user.photoURL
+        photo:data.user.photoURL,
+        
     }
 })
 
@@ -31,6 +32,7 @@ const userSlice=createSlice({
             state.name=payload.name
             state.email=payload.email
             state.photo=payload.photo
+            state.isLoading=payload.isLoading
         }
     },
     extraReducers:(builder)=>{

@@ -4,11 +4,12 @@ import { FcGoogle } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../redux/features/user/userSlice";
 import logo from '../assets/image/logo.png';
+import { useNavigate } from "react-router-dom";
 const RegisterPage = () => {
   const { isLoading, name, email, load } = useSelector(
     (state) => state.userSlice
   );
-  console.log(email,name);
+
   const dispatch = useDispatch();
   const {
     register,
@@ -16,11 +17,16 @@ const RegisterPage = () => {
     formState: { errors },
     reset,
   } = useForm();
+  const navigate=useNavigate()
 
   const onSubmit = ({ email, password, username, image }) => {
     dispatch(createUser({ email, password, username, image }));
-    reset();
+    reset()
+    
   };
+  if (email) {
+    navigate('/')
+  }
 
   return (
     <div

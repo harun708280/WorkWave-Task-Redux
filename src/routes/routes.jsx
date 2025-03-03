@@ -7,11 +7,12 @@ import Profile from '../pages/Profile';
 import Archive from '../pages/Archive';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/AuthPage';
+import Private from '../components/layouts/Private';
 
 const routes = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: <Private><App /></Private>,
     children: [
       {
         index: true,

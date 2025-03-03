@@ -5,6 +5,9 @@ import Chat from '../pages/Chat';
 import Settings from '../pages/Settings';
 import Profile from '../pages/Profile';
 import Archive from '../pages/Archive';
+import LoginPage from '../pages/LoginPage';
+import RegisterPage from '../pages/AuthPage';
+
 const routes = createBrowserRouter([
   {
     path: '/',
@@ -31,8 +34,17 @@ const routes = createBrowserRouter([
         path: '/profile',
         element: <Profile />,
       },
+      
     ],
   },
+  {
+    path:'/login',
+    element:<LoginPage></LoginPage>
+  },
+  {
+    path:'/auth',
+    element:<RegisterPage></RegisterPage>
+  }
 ]);
 
 export default routes;

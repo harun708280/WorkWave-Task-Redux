@@ -19,7 +19,7 @@ const Tasks = () => {
       <div className="col-span-9 px-10 pt-10">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="font-semibold text-3xl">WorkWave Tasks</h1>
+            <h1 className="font-semibold text-3xl">📂 WorkWave Tasks </h1>
           </div>
           <div className="flex gap-5">
             <button className="border-2 border-secondary/20 hover:border-primary hover:bg-primary rounded-xl h-10 w-10  grid place-content-center text-secondary hover:text-white transition-all">

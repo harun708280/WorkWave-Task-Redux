@@ -7,6 +7,7 @@ import {
 
 import logo from '../../assets/image/logo.png';
 import { NavLink } from 'react-router-dom';
+import { ArchiveBoxIcon } from '@heroicons/react/20/solid';
 
 const Sidebar = () => {
   return (
@@ -22,6 +23,16 @@ const Sidebar = () => {
           }
         >
           <SquaresPlusIcon className="h-7 w-7 group-hover:text-white" />
+        </NavLink>
+        <NavLink
+          to="/archive"
+          className={({ isActive }) =>
+            isActive
+              ? 'p-2 rounded-2xl bg-primary text-white cursor-pointer'
+              : 'p-2 rounded-2xl group hover:bg-primary text-secondary/40 cursor-pointer transition-all'
+          }
+        >
+          <ArchiveBoxIcon className="h-7 w-7 group-hover:text-white" />
         </NavLink>
         <NavLink
           to="/chat"

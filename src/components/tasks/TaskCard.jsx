@@ -39,7 +39,9 @@ const TaskCard = ({task}) => {
             onClick={()=>dispatch(updateTask({id:task.id,status:updateStatus}))}
             title="In progress"
           >
-            <ArrowRightIcon className="h-5 w-5 text-primary" />
+            
+              {task.status==='archive'?'':<ArrowRightIcon className="h-5 w-5 text-primary" />}
+            
           </button>
         </div>
       </div>

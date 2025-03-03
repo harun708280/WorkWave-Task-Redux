@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import auth from "../../../utils/firebaseConfig";
 
 const initialState={
@@ -8,12 +8,18 @@ const initialState={
     photo:'',
     isLoading:true,
     isError:false,
-    error:''
+    error:'',
+    load:false,
 }
-export const createUser=createAsyncThunk('userSlice/CreateUser',async({email,password})=>{
+export const createUser=createAsyncThunk('userSlice/CreateUser',async({email,password,username,image})=>{
     const data=await createUserWithEmailAndPassword(auth,email,password)
+    await updateProfile(auth.currentUser,{
+        displayName:username,photoURL:image
+    })
     return {
-        email:data.user,email
+        email:data.user.email,
+        name:data.user.displayName,
+        photo:data.user.photoURL
     }
 })
 
@@ -22,7 +28,9 @@ const userSlice=createSlice({
     initialState,
     reducers:{
         setUser:(state,{payload})=>{
+            state.name=payload.name
             state.email=payload.email
+            state.photo=payload.photo
         }
     },
     extraReducers:(builder)=>{
@@ -30,19 +38,23 @@ const userSlice=createSlice({
         .addCase(createUser.pending,(state)=>{
             state.isLoading=true,
             state.isError=false,
-            state.email=''
+            state.load=true
         })
         .addCase(createUser.fulfilled,(state,{payload})=>{
             state.isLoading=false,
             state.isError=false,
             state.email=payload.email,
+            state.name=payload.name,
+            state.photo=payload.photo,
             state.error=''
+            state.load=false
         })
         .addCase(createUser.rejected,(state,action)=>{
             state.isLoading=false,
             state.isError=false,
             state.email='',
-            state.error=action.error.message
+            state.error=action.error.message,
+            state.load=false
         })
     }
 })

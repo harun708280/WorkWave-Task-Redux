@@ -2,7 +2,17 @@ import { Menu, Transition } from '@headlessui/react'
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { FaUserShield } from "react-icons/fa";
+import { useDispatch } from 'react-redux';
+import { isLogout } from '../../redux/features/user/userSlice';
+import { signOut } from 'firebase/auth';
+import auth from '../../utils/firebaseConfig';
 export default function MenuDropDown({children}) {
+  const dispatch=useDispatch()
+
+  const handleLogout=()=>{
+    signOut(auth)
+    dispatch(isLogout())
+  }
   return (
     
       <Menu as="div" className="relative inline-block text-left z-[999]">
@@ -70,7 +80,8 @@ export default function MenuDropDown({children}) {
             <div className="px-1 py-1">
               <Menu.Item>
                 {({ active }) => (
-                  <button
+                  <button 
+                  onClick={handleLogout}
                     className={`${
                       active ? 'bg-primary text-white' : 'text-gray-900'
                     } group flex w-full items-center rounded-md px-2 py-2 text-sm`}

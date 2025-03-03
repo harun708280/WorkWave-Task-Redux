@@ -2,7 +2,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import auth from '../../utils/firebaseConfig';
-import { setUser } from '../../redux/features/user/userSlice';
+import { setUser, toggleLoading } from '../../redux/features/user/userSlice';
 import Loading from './Loading';
 import { Navigate } from 'react-router-dom';
 
@@ -18,12 +18,15 @@ const Private = ({children}) => {
                     name: user.displayName,
                     email: user.email,
                     photo: user.photoURL,
-                    isLoading:false
+                   
                 }));
-            }
+                dispatch(toggleLoading(false))
+            }else(
+                dispatch(toggleLoading(false))
+            )
         });
     
-        return () => unsubscribe(); // Cleanup function
+        return () => unsubscribe(); 
     }, [dispatch]);
     
 
@@ -31,7 +34,7 @@ const Private = ({children}) => {
         return <Loading/>
     }
     if (!isLoading && !email) {
-        return <Navigate to='/'></Navigate>
+        return <Navigate to='/login'></Navigate>
     }
     return children
 };

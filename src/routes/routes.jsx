@@ -15,7 +15,7 @@ const routes = createBrowserRouter([
     element: <Private><App /></Private>,
     children: [
       {
-        index: true,
+        index: '/',
         element: <Tasks />,
       },
       {

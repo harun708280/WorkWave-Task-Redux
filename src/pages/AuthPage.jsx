@@ -1,16 +1,24 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
+import { useDispatch, useSelector } from "react-redux";
+import { createUser } from "../redux/features/user/userSlice";
 
 const RegisterPage = () => {
+  const {isLoading,name,email}=useSelector((state)=>state.userSlice)
+  console.log(email);
+  const dispatch=useDispatch()
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Register Data:", data);
+  const onSubmit = ({email,password}) => {
+    dispatch(createUser({email,password}))
+    reset()
+   
   };
 
   return (

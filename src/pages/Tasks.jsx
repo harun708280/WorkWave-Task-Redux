@@ -10,6 +10,9 @@ import MenuDropDown from '../components/Modal/DropDwonMenu';
 const Tasks = () => {
   let [isOpen, setIsOpen] = useState(false)
   const {task}=useSelector((state)=>state.allTasks)
+  const {photo}=useSelector((state)=>state.userSlice)
+  console.log(photo);
+  
   const pending=task.filter(item=>item.status==='pending')
   const running=task.filter(item=>item.status==='running')
   const complete=task.filter(item=>item.status==='complete')
@@ -33,7 +36,7 @@ const Tasks = () => {
             <MenuDropDown>
             <div className="h-10 w-10 rounded-xl overflow-hidden">
               <img
-                src="https://images.unsplash.com/photo-1528892952291-009c663ce843?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=644&q=80"
+                src={photo}
                 alt=""
                 className="object-cover h-full w-full "
               />
@@ -83,7 +86,7 @@ const Tasks = () => {
           </div>
         </div>
       </div>
-      <div className="col-span-3 border-l-2 border-secondary/20 px-10 pt-10">
+      <div className="col-span-3 fixed right-0 border-l-2 border-secondary/20 px-10 pt-10">
         <div>
           <h1 className="text-xl">Members</h1>
           <div className="flex gap-3 mt-3">

@@ -15,7 +15,7 @@ const Tasks = () => {
   const {email,photo}=useSelector((state)=>state.userSlice)
  
     const {data:user,isError,isLoading}=useGetUserByEmailQuery(email)
-    console.log(user);
+    
     
     if (isLoading) {
       return <Loading></Loading>

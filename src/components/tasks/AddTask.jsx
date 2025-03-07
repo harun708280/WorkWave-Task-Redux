@@ -14,6 +14,8 @@ const AddTask = ({ isOpen, setIsOpen }) => {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
+    console.log(data);
+    
     dispatch(addTask(data))
    
     

@@ -1,32 +1,32 @@
-import { BellIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import MyTasks from '../components/tasks/MyTasks';
-import TaskCard from '../components/tasks/TaskCard';
-import MyModal from '../components/Modal/Modal';
-import { useEffect, useState } from 'react';
-import AddTask from '../components/tasks/AddTask';
-import { useSelector } from 'react-redux';
-import MenuDropDown from '../components/Modal/DropDwonMenu';
-import { useGetUserByEmailQuery } from '../redux/Api/userApi';
-import Loading from '../components/layouts/Loading';
+import { BellIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import MyTasks from "../components/tasks/MyTasks";
+import TaskCard from "../components/tasks/TaskCard";
+import MyModal from "../components/Modal/Modal";
+import { useEffect, useState } from "react";
+import AddTask from "../components/tasks/AddTask";
+import { useSelector } from "react-redux";
+import MenuDropDown from "../components/Modal/DropDwonMenu";
+import { useGetUserByEmailQuery } from "../redux/Api/userApi";
+import Loading from "../components/layouts/Loading";
+import { useGetAllTaskQuery } from "../redux/Api/taskApi";
 
 const Tasks = () => {
-  let [isOpen, setIsOpen] = useState(false)
-  const {task}=useSelector((state)=>state.allTasks)
-  const {email,photo}=useSelector((state)=>state.userSlice)
- 
-    const {data:user,isError,isLoading}=useGetUserByEmailQuery(email)
-    
-    
-    if (isLoading) {
-      return <Loading></Loading>
-    }
+  let [isOpen, setIsOpen] = useState(false);
+  const { task } = useSelector((state) => state.allTasks);
+  const { email, photo } = useSelector((state) => state.userSlice);
+  const { data: tasks, isLoading: loadTask, isFetching } = useGetAllTaskQuery();
+  console.log(tasks);
 
- 
-  
-  const pending=task.filter(item=>item.status==='pending')
-  const running=task.filter(item=>item.status==='running')
-  const complete=task.filter(item=>item.status==='complete')
-  
+  const { data: user, isError, isLoading } = useGetUserByEmailQuery(email);
+
+  if (isLoading || loadTask) {
+    return <Loading></Loading>;
+  }
+
+  const pending = task.filter((item) => item.status === "pending");
+  const running = task.filter((item) => item.status === "running");
+  const complete = task.filter((item) => item.status === "complete");
+
   return (
     <div className="h-screen grid grid-cols-12">
       <div className="col-span-9 px-10 pt-10">
@@ -41,16 +41,21 @@ const Tasks = () => {
             <button className="border-2 border-secondary/20 hover:border-primary hover:bg-primary rounded-xl h-10 w-10 grid place-content-center text-secondary hover:text-white transition-all">
               <BellIcon className="h-6 w-6" />
             </button>
-            <button className="btn btn-primary" onClick={()=>setIsOpen(!isOpen)}>Add Task</button>
+            <button
+              className="btn btn-primary"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              Add Task
+            </button>
             <AddTask isOpen={isOpen} setIsOpen={setIsOpen}></AddTask>
-            <MenuDropDown email={user?.email} >
-            <div className="h-10 w-10 rounded-xl overflow-hidden">
-              <img
-                src={user?.photo}
-                alt=""
-                className="object-cover h-full w-full "
-              />
-            </div>
+            <MenuDropDown email={user?.email}>
+              <div className="h-10 w-10 rounded-xl overflow-hidden">
+                <img
+                  src={user?.photo}
+                  alt=""
+                  className="object-cover h-full w-full "
+                />
+              </div>
             </MenuDropDown>
           </div>
         </div>
@@ -59,13 +64,26 @@ const Tasks = () => {
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
               <h1>Up Next</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                {pending.length}
+                {tasks.length}
               </p>
             </div>
             <div className="space-y-3">
-              {
-                pending.map(item=><TaskCard key={item.id} task={item} />)
-              }
+              {tasks.map((item) => (
+                <TaskCard
+                  key={item._id}
+                  task={{
+                    _id: item._id,
+                    title: item.title,
+                    description: item.description,
+                    deadline: item.deadline,
+                    priority: item.priority,
+                    assignTo: item.assignTo ? item.assignTo.name : "Unassigned", 
+                    assignToEmail: item.assignTo ? item.assignTo.email : "Unassigned", 
+                    assignToPhoto: item.assignTo ? item.assignTo.photo : "Unassigned", 
+
+                  }}
+                />
+              ))}
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">
@@ -76,9 +94,9 @@ const Tasks = () => {
               </p>
             </div>
             <div className="space-y-3">
-            {
-                running.map(item=><TaskCard key={item.id} task={item} />)
-              }
+              {running.map((item) => (
+                <TaskCard key={item.id} task={item} />
+              ))}
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">
@@ -89,9 +107,9 @@ const Tasks = () => {
               </p>
             </div>
             <div className="space-y-3">
-            {
-                complete.map(item=><TaskCard key={item.id} task={item} />)
-              }
+              {complete.map((item) => (
+                <TaskCard key={item.id} task={item} />
+              ))}
             </div>
           </div>
         </div>

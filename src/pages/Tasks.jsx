@@ -2,16 +2,26 @@ import { BellIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import MyTasks from '../components/tasks/MyTasks';
 import TaskCard from '../components/tasks/TaskCard';
 import MyModal from '../components/Modal/Modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddTask from '../components/tasks/AddTask';
 import { useSelector } from 'react-redux';
 import MenuDropDown from '../components/Modal/DropDwonMenu';
+import { useGetUserByEmailQuery } from '../redux/Api/userApi';
+import Loading from '../components/layouts/Loading';
 
 const Tasks = () => {
   let [isOpen, setIsOpen] = useState(false)
   const {task}=useSelector((state)=>state.allTasks)
-  const {photo}=useSelector((state)=>state.userSlice)
-  console.log(photo);
+  const {email,photo}=useSelector((state)=>state.userSlice)
+ 
+    const {data:user,isError,isLoading}=useGetUserByEmailQuery(email)
+    console.log(user);
+    
+    if (isLoading) {
+      return <Loading></Loading>
+    }
+
+ 
   
   const pending=task.filter(item=>item.status==='pending')
   const running=task.filter(item=>item.status==='running')
@@ -33,10 +43,10 @@ const Tasks = () => {
             </button>
             <button className="btn btn-primary" onClick={()=>setIsOpen(!isOpen)}>Add Task</button>
             <AddTask isOpen={isOpen} setIsOpen={setIsOpen}></AddTask>
-            <MenuDropDown>
+            <MenuDropDown email={user?.email} >
             <div className="h-10 w-10 rounded-xl overflow-hidden">
               <img
-                src={photo}
+                src={user?.photo}
                 alt=""
                 className="object-cover h-full w-full "
               />

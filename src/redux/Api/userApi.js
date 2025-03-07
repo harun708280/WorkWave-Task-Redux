@@ -9,8 +9,11 @@ export const userApi=baseApi.injectEndpoints({
                 method:'POST',
                 body:userData
             })
+        }),
+        getUserByEmail:builder.query({
+            query:(email)=>`/users/${email}`
         })
     })
 })
 
-export const {useRegisterUserMutation}=userApi
+export const {useRegisterUserMutation,useGetUserByEmailQuery}=userApi

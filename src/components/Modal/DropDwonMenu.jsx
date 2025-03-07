@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { isLogout } from '../../redux/features/user/userSlice';
 import { signOut } from 'firebase/auth';
 import auth from '../../utils/firebaseConfig';
-export default function MenuDropDown({children}) {
+export default function MenuDropDown({children,email}) {
   const dispatch=useDispatch()
 
   const handleLogout=()=>{
@@ -32,6 +32,9 @@ export default function MenuDropDown({children}) {
         >
           <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none">
             <div className="px-1 py-1 ">
+              <Menu.Item>
+                <p className='text-[14px] text-gray-600 pl-3 py-2'>  {email}</p>
+              </Menu.Item>
               <Menu.Item>
                 {({ active }) => (
                   <button

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createUser } from "../redux/features/user/userSlice";
 import logo from '../assets/image/logo.png';
 import { useNavigate } from "react-router-dom";
+import { useRegisterUserMutation } from "../redux/Api/userApi";
 const RegisterPage = () => {
   const { isLoading, name, email, load } = useSelector(
     (state) => state.userSlice
@@ -18,12 +19,29 @@ const RegisterPage = () => {
     reset,
   } = useForm();
   const navigate=useNavigate()
+  const [registerUser,{isSuccess}]=useRegisterUserMutation()
 
-  const onSubmit = ({ email, password, username, image }) => {
-    dispatch(createUser({ email, password, username, image }));
-    reset()
+  const onSubmit = async({ email, password, username, image }) => {
+    try{
+      dispatch(createUser({ email, password, username, image }));
+      const response=await registerUser({
+        name: username,
+        email: email,
+        photo: image
+      }).unwrap()
+      console.log(response);
+      
+
+      reset() 
+
+    }catch(err){
+      console.log(er);
+      
+
+    }
     
   };
+
   if (email) {
     navigate('/')
   }

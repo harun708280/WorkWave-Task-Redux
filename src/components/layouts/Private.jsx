@@ -5,11 +5,13 @@ import auth from '../../utils/firebaseConfig';
 import { setUser, toggleLoading } from '../../redux/features/user/userSlice';
 import Loading from './Loading';
 import { Navigate } from 'react-router-dom';
+import { useRegisterUserMutation } from '../../redux/Api/userApi';
 
 const Private = ({children}) => {
-    const {email,isLoading}=useSelector((state)=>state.userSlice)
+    const {name,email,isLoading}=useSelector((state)=>state.userSlice)
     const dispatch=useDispatch()
     console.log(email);
+    const [registerUser,{isSuccess}]=useRegisterUserMutation()
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -20,6 +22,7 @@ const Private = ({children}) => {
                     photo: user.photoURL,
                    
                 }));
+                
                 dispatch(toggleLoading(false))
             }else(
                 dispatch(toggleLoading(false))

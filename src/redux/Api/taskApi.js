@@ -16,6 +16,14 @@ export const taskApi=baseApi.injectEndpoints({
             query:()=>'/tasks',
             providesTags:['Tasks']
         }),
+        getStatusTask:builder.query({
+            query:(status)=>({
+                url:`/tasks/statusTask?status=${status}`,
+                method:'GET'
+            }),
+            providesTags:['Tasks']
+        })
+        ,
         updateTaskStatus:builder.mutation({
             query:({taskId,status})=>({
                 url:`/tasks/${taskId}/status`,
@@ -23,8 +31,15 @@ export const taskApi=baseApi.injectEndpoints({
                 body:{status}
             }),
             invalidatesTags:['Tasks']
+        }),
+        deleteTask:builder.mutation({
+            query:(taskId)=>({
+                url:`/tasks/${taskId}`,
+                method:'DELETE'
+            }),
+            invalidatesTags:['Tasks']
         })
     })
 })
 
-export const {useCreateTaskMutation,useGetAllTaskQuery,useUpdateTaskStatusMutation}=taskApi
+export const {useCreateTaskMutation,useGetAllTaskQuery,useUpdateTaskStatusMutation,useDeleteTaskMutation,useGetStatusTaskQuery}=taskApi

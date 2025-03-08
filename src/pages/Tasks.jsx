@@ -6,26 +6,39 @@ import { useEffect, useState } from "react";
 import AddTask from "../components/tasks/AddTask";
 import { useSelector } from "react-redux";
 import MenuDropDown from "../components/Modal/DropDwonMenu";
-import { useGetUserByEmailQuery } from "../redux/Api/userApi";
+import { useGetAllUserQuery, useGetUserByEmailQuery } from "../redux/Api/userApi";
 import Loading from "../components/layouts/Loading";
-import { useGetAllTaskQuery } from "../redux/Api/taskApi";
+import {
+  useGetAllTaskQuery,
+  useGetStatusTaskQuery,
+} from "../redux/Api/taskApi";
+import AllTask from "../components/tasks/AllTask";
 
 const Tasks = () => {
   let [isOpen, setIsOpen] = useState(false);
   const { task } = useSelector((state) => state.allTasks);
   const { email, photo } = useSelector((state) => state.userSlice);
-  const { data: tasks, isLoading: loadTask, isFetching } = useGetAllTaskQuery();
-  console.log(tasks);
+  const [selectedStatus, setSelectedStatus] = useState("all");
+
+  const { data: allTasks, isLoading: allTaskLoading } = useGetAllTaskQuery();
+  const { data: statusTasks, isLoading: statusTaskLoading } =
+    useGetStatusTaskQuery(selectedStatus);
+  console.log(statusTasks);
+
+  const displayedTasks = selectedStatus === "all" ? allTasks : statusTasks;
 
   const { data: user, isError, isLoading } = useGetUserByEmailQuery(email);
+  const {data:allUSers}=useGetAllUserQuery()
+  console.log(allUSers);
+  
 
-  if (isLoading || loadTask) {
+  if (allTaskLoading) {
     return <Loading></Loading>;
   }
 
-  const pending = tasks.filter((item) => item.status === "pending");
-  const running = tasks.filter((item) => item.status === "running");
-  const complete = tasks.filter((item) => item.status === "completed");
+  const pending = allTasks.filter((item) => item.status === "pending");
+  const running = allTasks.filter((item) => item.status === "running");
+  const complete = allTasks.filter((item) => item.status === "completed");
 
   return (
     <div className="h-screen grid grid-cols-12">
@@ -62,7 +75,7 @@ const Tasks = () => {
         <div className="grid grid-cols-3 gap-5 mt-10">
           <div className="relative h-[800px] overflow-auto">
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
-              <h1>Up Next</h1>
+              <h1 className="font-bold uppercase text-sm">Up Next</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
                 {pending.length}
               </p>
@@ -93,7 +106,7 @@ const Tasks = () => {
           </div>
           <div className="relative h-[800px] overflow-auto">
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
-              <h1>In Progress</h1>
+              <h1 className="font-bold uppercase text-sm">In Progress</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
                 {running.length}
               </p>
@@ -115,15 +128,15 @@ const Tasks = () => {
                     assignToPhoto: item.assignTo
                       ? item.assignTo.photo
                       : "Unassigned",
-                      status: item.status,
+                    status: item.status,
                   }}
                 />
               ))}
             </div>
           </div>
           <div className="relative h-[800px] overflow-auto">
-            <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
-              <h1>Completed</h1>
+            <div className="flex sticky  top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
+              <h1 className="font-bold uppercase text-sm">Completed</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
                 {complete.length}
               </p>
@@ -145,7 +158,7 @@ const Tasks = () => {
                     assignToPhoto: item.assignTo
                       ? item.assignTo.photo
                       : "Unassigned",
-                      status: item.status,
+                    status: item.status,
                   }}
                 />
               ))}
@@ -153,7 +166,8 @@ const Tasks = () => {
           </div>
         </div>
       </div>
-      <div className="col-span-3 fixed right-0 border-l-2 border-secondary/20 px-10 pt-10">
+
+      <div className="col-span-3 sticky top-0 border-l-2 border-secondary/20 px-10 pt-10">
         <div>
           <h1 className="text-xl">Members</h1>
           <div className="flex gap-3 mt-3">
@@ -194,7 +208,52 @@ const Tasks = () => {
             </div>
           </div>
         </div>
-        <MyTasks />
+
+        <div className="flex justify-between items-center mb-3 mt-5">
+          <h1 className="text-xl uppercase font-semibold">Tasks</h1>
+          <select
+            className="border px-3 py-1 rounded-md bg-white shadow"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+          >
+            <option value="all">All Tasks</option>
+            <option value="pending">Pending</option>
+            <option value="running">Running</option>
+            <option value="completed">Completed</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+        {displayedTasks.length === 0 && (
+          <p className="text-gray-500 text-center mt-5">
+            No tasks found for this category.
+          </p>
+        )}
+        {statusTaskLoading ? (
+          "Loading...."
+        ) : (
+          <div className="relative h-[800px] mt-5 overflow-auto pr-2">
+            {displayedTasks?.map((item) => (
+              <AllTask
+                key={item._id}
+                task={{
+                  _id: item._id,
+                  title: item.title,
+                  description: item.description,
+                  deadline: item.deadline,
+                  priority: item.priority,
+                  assignTo: item.assignTo ? item.assignTo.name : "Unassigned",
+                  assignToEmail: item.assignTo
+                    ? item.assignTo.email
+                    : "Unassigned",
+                  assignToPhoto: item.assignTo
+                    ? item.assignTo.photo
+                    : "Unassigned",
+                  status: item.status,
+                }}
+              ></AllTask>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

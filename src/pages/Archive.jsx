@@ -6,19 +6,19 @@ import { is } from './../../node_modules/date-fns/locale/is';
 import Loading from '../components/layouts/Loading';
 
 const Archive = () => {
-    const {task}=useSelector((state)=>state.allTasks)
+    
     const {data:tasks,isFetching,isLoading}=useGetAllTaskQuery()
     
-    const archive=tasks.filter((item)=>item.status==='archived')
+    const archive=tasks?.filter((item)=>item.status==='archived')
 
-    if (isFetching || isLoading) {
+    if (isLoading) {
         return <Loading></Loading>
     }
     
     
     return (
         <div className='py-7'>
-         <h2 className="text-3xl font-semibold text-gray-800  mb-5">📂 Archived Tasks</h2>
+        {archive.length>=1 &&  <h2 className="text-3xl font-semibold text-gray-800  mb-5">📂 Archived Tasks</h2>}
 
          <div className="grid grid-cols-4 gap-8">
          {

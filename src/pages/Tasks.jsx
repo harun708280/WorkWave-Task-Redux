@@ -23,9 +23,9 @@ const Tasks = () => {
     return <Loading></Loading>;
   }
 
-  const pending = task.filter((item) => item.status === "pending");
-  const running = task.filter((item) => item.status === "running");
-  const complete = task.filter((item) => item.status === "complete");
+  const pending = tasks.filter((item) => item.status === "pending");
+  const running = tasks.filter((item) => item.status === "running");
+  const complete = tasks.filter((item) => item.status === "completed");
 
   return (
     <div className="h-screen grid grid-cols-12">
@@ -64,11 +64,11 @@ const Tasks = () => {
             <div className="flex sticky top-0 justify-between bg-[#D3DDF9] p-5 rounded-md mb-3">
               <h1>Up Next</h1>
               <p className="bg-primary text-white w-6 h-6 grid place-content-center rounded-md">
-                {tasks.length}
+                {pending.length}
               </p>
             </div>
             <div className="space-y-3">
-              {tasks.map((item) => (
+              {pending.map((item) => (
                 <TaskCard
                   key={item._id}
                   task={{
@@ -77,10 +77,15 @@ const Tasks = () => {
                     description: item.description,
                     deadline: item.deadline,
                     priority: item.priority,
-                    assignTo: item.assignTo ? item.assignTo.name : "Unassigned", 
-                    assignToEmail: item.assignTo ? item.assignTo.email : "Unassigned", 
-                    assignToPhoto: item.assignTo ? item.assignTo.photo : "Unassigned", 
+                    assignTo: item.assignTo ? item.assignTo.name : "Unassigned",
+                    assignToEmail: item.assignTo
+                      ? item.assignTo.email
+                      : "Unassigned",
+                    assignToPhoto: item.assignTo
+                      ? item.assignTo.photo
+                      : "Unassigned",
 
+                    status: item.status,
                   }}
                 />
               ))}
@@ -95,7 +100,24 @@ const Tasks = () => {
             </div>
             <div className="space-y-3">
               {running.map((item) => (
-                <TaskCard key={item.id} task={item} />
+                <TaskCard
+                  key={item.id}
+                  task={{
+                    _id: item._id,
+                    title: item.title,
+                    description: item.description,
+                    deadline: item.deadline,
+                    priority: item.priority,
+                    assignTo: item.assignTo ? item.assignTo.name : "Unassigned",
+                    assignToEmail: item.assignTo
+                      ? item.assignTo.email
+                      : "Unassigned",
+                    assignToPhoto: item.assignTo
+                      ? item.assignTo.photo
+                      : "Unassigned",
+                      status: item.status,
+                  }}
+                />
               ))}
             </div>
           </div>
@@ -108,7 +130,24 @@ const Tasks = () => {
             </div>
             <div className="space-y-3">
               {complete.map((item) => (
-                <TaskCard key={item.id} task={item} />
+                <TaskCard
+                  key={item.id}
+                  task={{
+                    _id: item._id,
+                    title: item.title,
+                    description: item.description,
+                    deadline: item.deadline,
+                    priority: item.priority,
+                    assignTo: item.assignTo ? item.assignTo.name : "Unassigned",
+                    assignToEmail: item.assignTo
+                      ? item.assignTo.email
+                      : "Unassigned",
+                    assignToPhoto: item.assignTo
+                      ? item.assignTo.photo
+                      : "Unassigned",
+                      status: item.status,
+                  }}
+                />
               ))}
             </div>
           </div>

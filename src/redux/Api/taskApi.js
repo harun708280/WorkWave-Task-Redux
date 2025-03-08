@@ -15,8 +15,16 @@ export const taskApi=baseApi.injectEndpoints({
         getAllTask:builder.query({
             query:()=>'/tasks',
             providesTags:['Tasks']
+        }),
+        updateTaskStatus:builder.mutation({
+            query:({taskId,status})=>({
+                url:`/tasks/${taskId}/status`,
+                method:'PUT',
+                body:{status}
+            }),
+            invalidatesTags:['Tasks']
         })
     })
 })
 
-export const {useCreateTaskMutation,useGetAllTaskQuery}=taskApi
+export const {useCreateTaskMutation,useGetAllTaskQuery,useUpdateTaskStatusMutation}=taskApi
